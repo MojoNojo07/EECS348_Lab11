@@ -151,109 +151,127 @@ template <typename T> class Matrix {
         vector<vector<T>> matrix;
 };
 
+class Practice {
+    public:
+        Matrix<int> matrix1();
+        Matrix<int> matrix2();
+        string filename;
+
+        Practice(string filename) {
+            this->filename = filename;
+        };
+
+        void run() {
+            string line;
+            ifstream inputFile(filename);
+        
+            if (inputFile.is_open()) {
+                getline(inputFile, line);
+                int matrix_size = stoi(line);
+                Matrix<int> matrix1(matrix_size);
+                int row = 0;
+                while (row < matrix_size) {
+                    getline(inputFile, line);
+                    if (!line.empty()) {
+                        vector<string> splitLine = splitString(line, ' ');
+                        for (int col = 0; col < splitLine.size(); col++) {
+                            matrix1.set(row, col, stoi(splitLine[col]));
+                        }
+                        row++;
+                    }
+                }
+        
+                getline(inputFile, line);
+                Matrix<int> matrix2(matrix_size);
+                row = 0;
+                while (row < matrix_size) {
+                    getline(inputFile, line);
+                    if (!line.empty()) {
+                        vector<string> splitLine = splitString(line, ' ');
+                        for (int col = 0; col < splitLine.size(); col++) {
+                            matrix2.set(row, col, stoi(splitLine[col]));
+                        }
+                        row++;
+                    }
+                }
+                // we don't have any more input to process after this, so we can close the file here
+                inputFile.close();
+
+                int option;
+    
+                cout << "Select an option:\n";
+                cout << "1) Print both input matrices\n";
+                cout << "2) Add input matrices\n";
+                cout << "3) Multiply input matrices\n";
+                cout << "4) Get the sum of the first matrix's diagonals\n";
+                cout << "5) Swap rows in matrix 1\n";
+                cout << "6) Swap columns in matrix 1\n";
+                cout << "7) Set an element of matrix 1\n";
+                cout << "Option: ";
+                cin >> option;
+        
+                cout << endl;
+        
+                if (option == 1) {
+                    cout << "== MATRIX 1 ==\n";
+                    matrix1.print();
+                    cout << "\n== MATRIX 2 ==\n";
+                    matrix2.print();
+                } else if (option == 2) {
+                    Matrix<int> addedMatrix = matrix1 + matrix2;
+                    cout << "== SUM ==\n";
+                    addedMatrix.print();
+                } else if (option == 3) {
+                    Matrix<int> multipliedMatrix = matrix1 * matrix2;
+                    cout << "== PRODUCT ==\n";
+                    multipliedMatrix.print();
+                } else if (option == 4) {
+                    cout << "Sum of primary diagonal: " << matrix1.primaryDiagonalSum() << endl;
+                    cout << "Sum of secondary diagonal: " << matrix1.secondaryDiagonalSum() << endl;
+                    cout << "Sum of both diagonals: " << matrix1.primaryDiagonalSum() + matrix1.secondaryDiagonalSum() << endl;
+                } else if (option == 5) {
+                    int row1;
+                    int row2;
+                    cout << "Enter the number of the first row: ";
+                    cin >> row1;
+                    cout << "Enter the number of the second row: ";
+                    cin >> row2;
+                    cout << "== NEW MATRIX ==\n";
+                    matrix1.swapRows(row1, row2).print();
+                } else if (option == 6) {
+                    int col1;
+                    int col2;
+                    cout << "Enter the number of the first column: ";
+                    cin >> col1;
+                    cout << "Enter the number of the second column: ";
+                    cin >> col2;
+                    cout << "== NEW MATRIX ==\n";
+                    matrix1.swapColumns(col1, col2).print();
+                } else if (option == 7) {
+                    int row;
+                    int col;
+                    int entry;
+                    cout << "Enter the row of the entry to set: ";
+                    cin >> row;
+                    cout << "Enter the column of the entry to set: ";
+                    cin >> col;
+                    cout << "Enter the new entry: ";
+                    cin >> entry;
+        
+                    matrix1.set(row, col, entry);
+                    cout << "== NEW MATRIX ==\n";
+                    matrix1.print();
+                } else {
+                    cout << "Invalid option!\n";
+                }
+            }
+        }
+};
+
 int main() {
-    string line;
-    ifstream inputFile("input.txt");
-
-    if (inputFile.is_open()) {
-        getline(inputFile, line);
-        int matrix_size = stoi(line);
-        Matrix<int> matrix1(matrix_size);
-        int row = 0;
-        while (row < matrix_size) {
-            getline(inputFile, line);
-            if (!line.empty()) {
-                vector<string> splitLine = splitString(line, ' ');
-                for (int col = 0; col < splitLine.size(); col++) {
-                    matrix1.set(row, col, stoi(splitLine[col]));
-                }
-                row++;
-            }
-        }
-
-        getline(inputFile, line);
-        Matrix<int> matrix2(matrix_size);
-        row = 0;
-        while (row < matrix_size) {
-            getline(inputFile, line);
-            if (!line.empty()) {
-                vector<string> splitLine = splitString(line, ' ');
-                for (int col = 0; col < splitLine.size(); col++) {
-                    matrix2.set(row, col, stoi(splitLine[col]));
-                }
-                row++;
-            }
-        }
-        // we don't have any more input to process after this, so we can close the file here
-        inputFile.close();
-
-        int option;
-
-        cout << "Select an option:\n";
-        cout << "1) Print both input matrices\n";
-        cout << "2) Add input matrices\n";
-        cout << "3) Multiply input matrices\n";
-        cout << "4) Get the sum of the first matrix's diagonals\n";
-        cout << "5) Swap rows in matrix 1\n";
-        cout << "6) Swap columns in matrix 1\n";
-        cout << "7) Set an element of matrix 1\n";
-        cout << "Option: ";
-        cin >> option;
-
-        cout << endl;
-
-        if (option == 1) {
-            cout << "== MATRIX 1 ==\n";
-            matrix1.print();
-            cout << "\n== MATRIX 2 ==\n";
-            matrix2.print();
-        } else if (option == 2) {
-            Matrix<int> addedMatrix = matrix1 + matrix2;
-            cout << "== SUM ==\n";
-            addedMatrix.print();
-        } else if (option == 3) {
-            Matrix<int> multipliedMatrix = matrix1 * matrix2;
-            cout << "== PRODUCT ==\n";
-            multipliedMatrix.print();
-        } else if (option == 4) {
-            cout << "Sum of primary diagonal: " << matrix1.primaryDiagonalSum() << endl;
-            cout << "Sum of secondary diagonal: " << matrix1.secondaryDiagonalSum() << endl;
-            cout << "Sum of both diagonals: " << matrix1.primaryDiagonalSum() + matrix1.secondaryDiagonalSum() << endl;
-        } else if (option == 5) {
-            int row1;
-            int row2;
-            cout << "Enter the number of the first row: ";
-            cin >> row1;
-            cout << "Enter the number of the second row: ";
-            cin >> row2;
-            cout << "== NEW MATRIX ==\n";
-            matrix1.swapRows(row1, row2).print();
-        } else if (option == 6) {
-            int col1;
-            int col2;
-            cout << "Enter the number of the first column: ";
-            cin >> col1;
-            cout << "Enter the number of the second column: ";
-            cin >> col2;
-            cout << "== NEW MATRIX ==\n";
-            matrix1.swapColumns(col1, col2).print();
-        } else if (option == 7) {
-            int row;
-            int col;
-            int entry;
-            cout << "Enter the row of the entry to set: ";
-            cin >> row;
-            cout << "Enter the column of the entry to set: ";
-            cin >> col;
-            cout << "Enter the new entry: ";
-            cin >> entry;
-
-            matrix1.set(row, col, entry);
-            cout << "== NEW MATRIX ==\n";
-            matrix1.print();
-        } else {
-            cout << "Invalid option!\n";
-        }
-    }
+    string filename;
+    cout << "Input the name of the input file (including the file extension): ";
+    cin >> filename;
+    Practice practice1(filename);
+    practice1.run();
 }
-
