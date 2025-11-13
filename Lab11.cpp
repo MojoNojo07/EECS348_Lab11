@@ -34,6 +34,17 @@ vector<string> splitString(string input, char delimiter) {
 
 template <typename T> class Matrix {
     public:
+        Matrix(int n) {
+            this->_size = n;
+            for(int i = 0; i < n; i++) {
+                vector<T> row;
+                for(int j = 0; j < n; j++) {
+                    row.push_back(0);
+                }
+                matrix.push_back(row);
+            }
+        }
+
         int size() {
             return this->_size;
         }
@@ -55,6 +66,9 @@ template <typename T> class Matrix {
             }
         }
 
+        void setRow(int rowIndex, vector<T> row) {
+            matrix[rowIndex] = row;
+        }
 
         vector<T> getRow(int row) {
             return matrix[row];
@@ -84,29 +98,23 @@ template <typename T> class Matrix {
             }
             return sum;
         }
-        void swapRows(int row1, int row2) {
-            vector<T> temp = getRow(row1);
-            matrix[row1] = getRow(row2);
-            matrix[row2] = temp;
+
+        Matrix<T> swapRows(int row1, int row2) {
+            Matrix<T> swappedMatrix = *this;
+            swappedMatrix.setRow(row1, getRow(row2));
+            swappedMatrix.setRow(row2, getRow(row1));
+
+            return swappedMatrix;
         }
 
-        void swapColumns(int col1, int col2) {
-            vector<T> temp = getColumn(col1);
+        Matrix<T> swapColumns(int col1, int col2) {
+            Matrix<T> swappedMatrix = *this;
             for (int i = 0; i < this->size(); i++) {
-                set(i, col1, get(i, col2));
-                set(i, col2, temp[i]);
+                swappedMatrix.set(i, col1, get(i, col2));
+                swappedMatrix.set(i, col2, get(i, col1));
             }
-        }
 
-        Matrix(int n) {
-            this->_size = n;
-            for(int i = 0; i < n; i++) {
-                vector<T> row;
-                for(int j = 0; j < n; j++) {
-                    row.push_back(0);
-                }
-                matrix.push_back(row);
-            }
+            return swappedMatrix;
         }
 
         Matrix<T> operator+(Matrix<T> matrix2) {
@@ -218,9 +226,8 @@ int main() {
             cin >> row1;
             cout << "Enter the number of the second row: ";
             cin >> row2;
-            matrix1.swapRows(row1, row2);
             cout << "== NEW MATRIX ==\n";
-            matrix1.print();
+            matrix1.swapRows(row1, row2).print();
         } else if (option == 6) {
             int col1;
             int col2;
@@ -228,9 +235,8 @@ int main() {
             cin >> col1;
             cout << "Enter the number of the second column: ";
             cin >> col2;
-            matrix1.swapColumns(col1, col2);
             cout << "== NEW MATRIX ==\n";
-            matrix1.print();
+            matrix1.swapColumns(col1, col2).print();
         } else if (option == 7) {
             int row;
             int col;
